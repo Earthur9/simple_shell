@@ -52,7 +52,6 @@ int executeCommand(char *command, char *args[])
 	 */
 	else
 		{
-	
 	/* Parent process */
 	int status;
 
@@ -64,7 +63,5 @@ int executeCommand(char *command, char *args[])
 		return (1);
 	}
 }
-
 return (0);
 }
-

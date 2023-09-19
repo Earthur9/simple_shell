@@ -15,29 +15,23 @@ int main(void)
 	while (1)
 	{
 		displayPrompt();
-
-		/* Read user input */
 		if (fgets(input, MAX_INPUT_SIZE, stdin) == NULL)
 		{
 			printf("\n");
 			break;
 		}
-
 		len = strlen(input);
 
 		if (len > 0 && input[len - 1] == '\n')
 		{
 			input[len - 1] = '\0';
 		}
-
 		token = strtok(input, " \t");
 
 		if (token == NULL)
 		{
 			continue; /* Skip empty input lines */
-		}
-		
-		while (token != NULL)
+		} while (token != NULL)
 		{
 			args[arg_count] = token;
 			arg_count++;
@@ -47,26 +41,11 @@ int main(void)
 				fprintf(stderr, "Error: Too many arguments\n");
 				break;
 			}
-
 			token = strtok(NULL, " \t");
 		}
-
 		args[arg_count] = NULL;
 		executeCommand(args[0], args);
 	}
 	return (0);
 }
 
-/**
-  *		next_token = strtok(NULL, " \t");
-  *
-  *
-  *		if (next_token != NULL)
-  *		{
-  *			fprintf(stderr, "Error: Command should be a single word\n");
-  *			continue;
-  *		}
-  *
-  *		executeCommand(token);
-  *	}
-  */
