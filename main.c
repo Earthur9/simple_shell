@@ -9,7 +9,8 @@ int main(void)
 {
 	char input[MAX_INPUT_SIZE];
 	size_t len;
-	char *token, *next_token;
+	char *token, *args[MAX_ARG_COUNT];
+	int arg_count = 0;
 
 	while (1)
 	{
@@ -35,18 +36,37 @@ int main(void)
 		{
 			continue; /* Skip empty input lines */
 		}
-
-		next_token = strtok(NULL, " \t");
-
-		if (next_token != NULL)
+		
+		while (token != NULL)
 		{
-			fprintf(stderr, "Error: Command should be a single word\n");
-			continue;
+			args[arg_count] = token;
+			arg_count++;
+
+			if (arg_count >= MAX_ARG_COUNT - 1)
+			{
+				fprintf(stderr, "Error: Too many arguments\n");
+				break;
+			}
+
+			token = strtok(NULL, " \t");
 		}
 
-		executeCommand(token);
+		args[arg_count] = NULL;
+		executeCommand(args[0], args);
 	}
-
 	return (0);
 }
 
+/**
+  *		next_token = strtok(NULL, " \t");
+  *
+  *
+  *		if (next_token != NULL)
+  *		{
+  *			fprintf(stderr, "Error: Command should be a single word\n");
+  *			continue;
+  *		}
+  *
+  *		executeCommand(token);
+  *	}
+  */
