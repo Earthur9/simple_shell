@@ -1,0 +1,84 @@
+#include "shell.h"
+
+/**
+ * main - runs the shell program.
+ *
+ * Return: 0 always.
+ */
+
+int main(void)
+{
+	initialize_shell();
+	return (0);
+}
+
+/**
+ * initialize_shell - This function initializes the shell, setting up
+ *			the main loop for both interactive and non-interactive modes.
+ */
+
+void initialize_shell(void)
+{
+	char input[MAX_INPUT_SIZE];
+	char command[MAX_INPUT_SIZE];
+	int command_length;
+	int interactive_mode = isatty(STDIN_FILENO);
+
+	while (1)
+	{
+		if (interactive_mode)
+		{
+			printf("($) ");
+			if (fgets(input, sizeof(input), stdin) == NULL)
+			{
+				printf("\n");
+				break;
+			}
+		} else
+		{
+			if (fgets(input, sizeof(input), stdin) == NULL)
+			{
+				break;
+			}
+			input[strlen(input) - 1] = '\0';
+		}
+
+		process_input(input, command, &command_length);
+		execute_input(command);
+
+		if (!interactive_mode)
+		{
+			break;
+		}
+	}
+}
+
+/**
+ * process_input - This function processes the user's input, including parsing
+ *		it into a single-word command and calculating its length.
+ * @input: The user input string to be processed.
+ * @command: A buffer to store the parsed command.
+ * @command_length: A pointer to store the length of the parsed command.
+ */
+
+void process_input(char *input, char *command, int *command_length)
+{
+	if (strlen(input) > 0)
+	{
+		parse_input(input, command, command_length);
+	}
+}
+
+/**
+ * execute_input - This function executes the processed input, which includes
+ *			executing the command.
+ * @command: The command to be executed.
+ */
+
+void execute_input(char *command)
+{
+	if (strlen(command) > 0)
+	{
+		execute_command(command);
+	}
+}
