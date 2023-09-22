@@ -6,7 +6,7 @@
 
 #include "simple_shell.h"
 #include <stddef.h>
-
+#include <string.h>
 
 /**
  * execute_command - Executes a command.
@@ -24,18 +24,32 @@
 void execute_command(char *command)
 {
 	pid_t pid;
-	int status;
-	char **args = malloc(sizeof(char *) * 2);
+	int status, i = 1, j;
+	char **args = malloc(sizeof(char *) * 2), *program_name, path[1024];
 
 	if (args == NULL)
 	{
 		perror("malloc() failed");
 		return;
 	}
-	args[0] = command;
-	args[1] = NULL;
-
-	/* Fork a child process to execute the command */
+	args[0] = strtok(command, " ");
+	while ((args[i] = strtok(NULL, " ")) != NULL)
+	{
+		i++;
+	}
+	for (j = 0; j < sizeof(args) / sizeof(args[0]); j++)
+	{
+		args[j] = escapeshellarg(args[j]);
+	}
+	#ifndef __linux__
+	printf("readlink() is not available on this platform\n");
+	return;
+	#endif
+	if (readlink("/proc/self/exe", path, sizeof(path)) < 0)
+	{
+		perror("readlink() failed");
+		return;
+	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -43,25 +57,16 @@ void execute_command(char *command)
 		free(args);
 		return;
 	}
-
-	/* Child process */
 	if (pid == 0)
 	{
-		/* Execute the command */
 		execve(command, args, environ);
-
-		/* If execve() fails, exit the child process */
 		exit(1);
 	}
-
-	/* Parent process */
 	waitpid(pid, &status, 0);
-
-	/* Check the exit status of the child process */
 	if (status != 0)
 	{
-		printf("%s: command failed\n", command);
+		program_name = strrchr(path, '/') + 1;
+		printf("%s: No such file or directory\n", program_name);
 	}
 	free(args);
 }
-

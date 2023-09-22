@@ -9,6 +9,8 @@
 
 /**
  * main - The entry point for the simple shell program.
+ * @argc: Argument count.
+ * @argv: Argument vector.
  *
  * This function displays the shell prompt and waits for the user to type a
  * command. Once the user has typed a command, the function executes the
@@ -19,31 +21,27 @@
  * Return: 0 on success, or 1 on failure.
  */
 
-int main(void)
+int main(int argc, char **argv)
 {
 	char line[100];
 
+	argc = argc;
+	argv = argv;
+
 	while (1)
 	{
-		/* Display the prompt */
 		printf(PROMPT);
-
-		/* Read a line from the user */
 		fgets(line, sizeof(line), stdin);
 
-		/* Check for the end of file condition (Ctrl+D) */
 		if (feof(stdin))
 		{
 			break;
 		}
 
-		/* Remove the trailing newline character */
 		line[strlen(line) - 1] = '\0';
 
-		/* Execute the command */
 		execute_command(line);
 	}
-
 	return (0);
 }
 
