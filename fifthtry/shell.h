@@ -38,17 +38,6 @@ typedef enum _bool
 	true_s
 } _bool;
 
-typedef struct config
-{
-	char *buffer;
-	char **args;
-	char *fullPath;
-	char **envList;
-	unsigned int lineCounter;
-	int errorStatus;
-	linked_l *env;
-} config;
-
 
 /**
  * struct linkedList - linked list data structure
@@ -156,21 +145,6 @@ void errorHandler(config *build);
 unsigned int countDigits(int num);
 char *itoa(unsigned int num);
 char *getErrorMessage();
-char **tokenize_path(char *path_env);
-char *_strdup(const char *str);void shell(config *build);
-void checkPath(config *build);
-void checkAndGetLine(config *build);
-void stripComments(char *str);
-void forkAndExecute(config *build);
-void convertLLtoArr(config *build);
-void freeMembers(config *build);
-void freeArgs(char **args);
-void freeArgsAndBuffer(config *build);
-char **tokenize_path(char *path_env);
-char *_strdup(const char *str);
-char *_strcat(char *dest, const char *src);
-char *_strchr(char *s, int c);
-char *_getenv(const char *name);
 
 /* shell_helpers */
 void insertNullByte(char *str, unsigned int index);
@@ -179,7 +153,7 @@ void displayNewLine(void);
 void sigintHandler(int sigint);
 
 /* path */
-void checkPath(config *build);
+char *checkPath(char *command);
 _bool checkEdgeCases(config *build);
 
 /* split_string */
