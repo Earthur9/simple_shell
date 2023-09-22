@@ -24,7 +24,7 @@
 void execute_command(char *command)
 {
 	pid_t pid;
-	int status, i = 1, j;
+	int status, i = 1, j, k;
 	char **args = malloc(sizeof(char *) * 2), *program_name, path[1024];
 
 	if (args == NULL)
@@ -37,14 +37,27 @@ void execute_command(char *command)
 	{
 		i++;
 	}
-	for (j = 0; j < sizeof(args) / sizeof(args[0]); j++)
+	for (j = 0; j < i; j++)
 	{
-		args[j] = escapeshellarg(args[j]);
+		if (strlen(args[j]) == 1)
+		{
+			args[j][0] == '\\';
+		} else
+		{
+			for (k = 0; args[j][k] != '\0'; k++)
+			{
+				if (args[j][k] == ' ' || args[j][k] == '"'
+						|| args[j][k] == '$' || args[j][k] == '\\')
+				{
+					strncat(args[j], "\\", 1);
+				}
+			}
+		}
 	}
-	#ifndef __linux__
+#ifndef __linux__
 	printf("readlink() is not available on this platform\n");
 	return;
-	#endif
+#endif
 	if (readlink("/proc/self/exe", path, sizeof(path)) < 0)
 	{
 		perror("readlink() failed");
