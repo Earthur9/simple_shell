@@ -60,6 +60,19 @@ void escape_special_characters(char **args, int arg_count)
 }
 
 /**
+ * execute_command_internal - Executes a command internally.
+ *
+ * @path: The path to the executable.
+ * @args: The arguments for the command.
+ */
+void execute_command_internal(char *path, char **args)
+{
+	execve(path, args, environ);
+	perror("execve() failed");
+	exit(1);
+}
+
+/**
  * execute_command - Executes a command.
  *
  * @command: The command to be executed.
@@ -96,7 +109,6 @@ void execute_command(char *command)
 		return;
 	}
 	pid = fork();
-
 	if (pid < 0)
 	{
 		perror("fork() failed");
@@ -105,9 +117,7 @@ void execute_command(char *command)
 	}
 	if (pid == 0)
 	{
-		execve(path, args, environ);
-		perror("execve() failed");
-		exit(1);
+		execute_command_internal(path, args);
 	}
 	waitpid(pid, &status, 0);
 	if (status != 0)
