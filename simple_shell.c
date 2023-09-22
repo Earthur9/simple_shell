@@ -9,8 +9,6 @@
 
 /**
  * main - The entry point for the simple shell program.
- * @argc: Argument count.
- * @argv: Argument vector.
  *
  * This function displays the shell prompt and waits for the user to type a
  * command. Once the user has typed a command, the function executes the
@@ -21,12 +19,9 @@
  * Return: 0 on success, or 1 on failure.
  */
 
-int main(int argc, char **argv)
+int main(void)
 {
 	char line[100];
-
-	argc = argc;
-	argv = argv;
 
 	while (1)
 	{
