@@ -151,7 +151,7 @@ void displayNewLine(void);
 void sigintHandler(int sigint);
 
 /* path */
-_bool checkPath(config *);
+void checkPath(config *build);
 _bool checkEdgeCases(config *build);
 
 /* split_string */
